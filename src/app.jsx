@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import ReactDOM from 'react-dom/client';
+// 'react'와 'react-dom' import를 제거합니다.
+// import React, { useState, useEffect, useCallback } from 'react';
+// import ReactDOM from 'react-dom/client';
+
+// index.html에서 로드한 전역 React 객체에서 훅(Hook)을 가져옵니다.
+const { useState, useEffect, useCallback } = React;
 
 // 분리된 data.js 파일에서 CARD_DATA와 TRANSLATIONS를 가져옵니다.
-// 이 파일이 data.js와 같은 디렉토리에 있다고 가정합니다.
-import { CARD_DATA, TRANSLATIONS } from './data.js';
+// 경로를 index.html 기준인 './src/data.js'로 수정합니다.
+import { CARD_DATA, TRANSLATIONS } from './src/data.js';
 
 // --- 헬퍼 함수: 배열 섞기 (Fisher-Yates Shuffle) ---
 function shuffleArray(array) {
@@ -21,7 +25,7 @@ function shuffleArray(array) {
 const CardBack = () => (
   <div className="w-full h-full bg-gradient-to-b from-indigo-500 to-purple-700 rounded-lg border-4 border-yellow-300 flex items-center justify-center p-4">
     <svg className="w-1/2 h-1/2 text-yellow-300 opacity-50" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 15.586l-2.939 2.034.56-3.4-2.47-2.4 3.4-.5L10 8.186l1.549 3.134 3.4.5-2.47 2.4.56 3.4L10 15.586zM10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+      <path d="M10 15.586l-2.939 2.034.56-3.4-2.47-2.4 3.4-.5L10 8.186l1.549 3.134 3.4 .5-2.47 2.4 .56 3.4L10 15.586zM10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
     </svg>
   </div>
 );
@@ -51,7 +55,7 @@ const LanguageSelector = ({ lang, setLang }) => {
   ];
 
   return (
-    <div className="absolute top-4 right-4 bg-gray-800 bg-opacity-70 rounded-lg p-2 flex space-x-2">
+    <div className="absolute top-4 right-4 bg-gray-800 bg-opacity-70 rounded-lg p-2 flex space-x-2 z-10">
       {languages.map((l) => (
         <button
           key={l.code}
@@ -118,9 +122,12 @@ function App() {
 
   // 카드 클릭 핸들러
   const handleCardClick = (index) => {
-    if (index !== revealedCount || cards[index].flipped) {
+    if (index !== revealedCount || (cards[index] && cards[index].flipped)) {
       return;
     }
+
+    // cards 배열이 아직 준비되지 않았으면(초기화 중) 클릭을 무시합니다.
+    if (!cards[index]) return;
 
     const newCards = [...cards];
     newCards[index].flipped = true;
@@ -171,7 +178,7 @@ function App() {
           <div
             key={index}
             className={`w-28 h-48 md:w-40 md:h-64 cursor-pointer transition-transform duration-700 transform-style-3d ${
-              card.flipped ? 'rotate-y-180' : ''
+              card && card.flipped ? 'rotate-y-180' : ''
             } ${
               isShuffling ? 'animate-pulse' : ''
             }`}
@@ -181,7 +188,7 @@ function App() {
               <CardBack />
             </div>
             <div className="absolute w-full h-full backface-hidden rotate-y-180">
-              <CardFront name={card.name} isReversed={card.isReversed} imageUrl={card.imageUrl} />
+              {card && <CardFront name={card.name} isReversed={card.isReversed} imageUrl={card.imageUrl} />}
             </div>
           </div>
         ))}
@@ -220,8 +227,10 @@ function App() {
 
 // React 앱을 DOM에 렌더링합니다.
 const container = document.getElementById('root');
+// 전역 ReactDOM 객체를 사용합니다.
 const root = ReactDOM.createRoot(container);
 root.render(
+  // React.StrictMode를 사용합니다.
   <React.StrictMode>
     <App />
   </React.StrictMode>

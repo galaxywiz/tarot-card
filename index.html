@@ -4,20 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>타로 카드점 (Tarot Reading)</title>
-    <!-- Tailwind CSS 로드 -->
+    
+    <!-- 1. Tailwind CSS 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Inter 폰트 적용 (Tailwind 기본 폰트) */
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-      body {
-        font-family: 'Inter', sans-serif;
-      }
+      body { font-family: 'Inter', sans-serif; }
     </style>
+    
+    <!-- 2. React와 ReactDOM 라이브러리 로드 (필수) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- 3. Babel Standalone 로드 (JSX를 변환하기 위해 필수) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   </head>
   <body class="bg-gray-900">
+    <!-- React 앱이 렌더링될 DOM 노드 -->
     <div id="root"></div>
-    <!-- React 앱 로드 (app.jsx가 컴파일된 결과) -->
-    <!-- 로컬 개발 시: <script type="module" src="/src/app.jsx"></script> -->
-    <!-- Netlify 배포 시에는 빌드 도구(Vite, CRA)가 이 부분을 자동으로 처리합니다. -->
+
+    <!-- 
+      4. React 앱 스크립트 로드
+         - type="text/babel": Babel이 이 스크립트를 변환하도록 지시합니다.
+         - data-type="module": app.jsx 안의 'import/export' 구문을 사용할 수 있게 합니다.
+         - src="./src/app.jsx": 메인 앱 파일 경로
+    -->
+    <script type="text/babel" data-type="module" src="./src/app.jsx"></script>
+    
   </body>
 </html>
